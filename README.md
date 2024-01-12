@@ -17,10 +17,11 @@ Put this patch into the same directory of header/source to use FXLS8962AF and us
 # patch < fxls8962af.patch
 ```
 
-If you wish to build the module and install it into your Raspberry PI Zero/Zero W, then the example commands are like below after patching.
+If you wish to build the module and install it into your Raspberry PI Zero/Zero W, then the example commands are like below after patching. For kernel/kernel module build, please refer to [Official documents](https://www.raspberrypi.com/documentation/computers/linux_kernel.html).
 ```
 # cd <Directory to kernel source>
-# make oldconfig
+# KERNEL=kernel
+# make bcmrpi_defconfig
 # make menuconfig
 --Check <M> at NXP FXLS8924AF/FXLS8964AF Accelerometer I2C Driver
 or NXP FXLS8924AF/FXLS8964AF Accelerometer I2C Driver
