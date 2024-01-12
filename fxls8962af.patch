@@ -1,0 +1,122 @@
+--- fxls8962af-core.c.orig	2024-01-11 13:35:23.398113875 +0900
++++ fxls8962af-core.c	2024-01-11 13:55:28.392358275 +0900
+@@ -124,8 +124,13 @@
+ 
+ #define FXLS8962AF_MAX_REG			0x38
+ 
++#define FXLS8961AF_DEVICE_ID			0x81
+ #define FXLS8962AF_DEVICE_ID			0x62
+ #define FXLS8964AF_DEVICE_ID			0x84
++#define FXLS8967AF_DEVICE_ID			0x87
++#define FXLS8971CF_DEVICE_ID			0x83
++#define FXLS8974CF_DEVICE_ID			0x86
++
+ 
+ /* Raw temp channel offset */
+ #define FXLS8962AF_TEMP_CENTER_VAL		25
+@@ -752,6 +757,12 @@ static const struct iio_chan_spec fxls89
+ };
+ 
+ static const struct fxls8962af_chip_info fxls_chip_info_table[] = {
++	[fxls8961af] = {
++		.chip_id = FXLS8961AF_DEVICE_ID,
++		.name = "fxls8961af",
++		.channels = fxls8962af_channels,
++		.num_channels = ARRAY_SIZE(fxls8962af_channels),
++	},
+ 	[fxls8962af] = {
+ 		.chip_id = FXLS8962AF_DEVICE_ID,
+ 		.name = "fxls8962af",
+@@ -764,6 +775,25 @@ static const struct fxls8962af_chip_info
+ 		.channels = fxls8962af_channels,
+ 		.num_channels = ARRAY_SIZE(fxls8962af_channels),
+ 	},
++	[fxls8967af] = {
++		.chip_id = FXLS8967AF_DEVICE_ID,
++		.name = "fxls8967af",
++		.channels = fxls8962af_channels,
++		.num_channels = ARRAY_SIZE(fxls8962af_channels),
++	},
++	[fxls8971cf] = {
++		.chip_id = FXLS8971CF_DEVICE_ID,
++		.name = "fxls8971cf",
++		.channels = fxls8962af_channels,
++		.num_channels = ARRAY_SIZE(fxls8962af_channels),
++	},
++	[fxls8974cf] = {
++		.chip_id = FXLS8974CF_DEVICE_ID,
++		.name = "fxls8974cf",
++		.channels = fxls8962af_channels,
++		.num_channels = ARRAY_SIZE(fxls8962af_channels),
++	},
++
+ };
+ 
+ static const struct iio_info fxls8962af_info = {
+--- fxls8962af.h.orig	2024-01-11 13:48:16.733566184 +0900
++++ fxls8962af.h	2024-01-11 13:49:12.183383034 +0900
+@@ -9,8 +9,12 @@ struct regmap;
+ struct device;
+ 
+ enum {
++	fxls8961af,
+ 	fxls8962af,
+ 	fxls8964af,
++	fxls8967af,
++	fxls8971cf,
++	fxls8974cf,
+ };
+ 
+ int fxls8962af_core_probe(struct device *dev, struct regmap *regmap, int irq);
+--- fxls8962af-i2c.c.orig	2024-01-11 13:35:32.908019971 +0900
++++ fxls8962af-i2c.c	2024-01-11 13:57:07.602132970 +0900
+@@ -28,15 +28,23 @@ static int fxls8962af_probe(struct i2c_c
+ }
+ 
+ static const struct i2c_device_id fxls8962af_id[] = {
++	{ "fxls8961af", fxls8961af },
+ 	{ "fxls8962af", fxls8962af },
+ 	{ "fxls8964af", fxls8964af },
++	{ "fxls8967af", fxls8967af },
++	{ "fxls8971cf", fxls8971cf },
++	{ "fxls8974cf", fxls8974cf },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, fxls8962af_id);
+ 
+ static const struct of_device_id fxls8962af_of_match[] = {
++	{ .compatible = "nxp,fxls8961af" },
+ 	{ .compatible = "nxp,fxls8962af" },
+ 	{ .compatible = "nxp,fxls8964af" },
++	{ .compatible = "nxp,fxls8967af" },
++	{ .compatible = "nxp,fxls8971cf" },
++	{ .compatible = "nxp,fxls8974cf" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, fxls8962af_of_match);
+--- fxls8962af-spi.c.orig	2024-01-11 13:35:40.337947622 +0900
++++ fxls8962af-spi.c	2024-01-11 13:59:55.891778566 +0900
+@@ -28,15 +28,23 @@ static int fxls8962af_probe(struct spi_d
+ }
+ 
+ static const struct of_device_id fxls8962af_spi_of_match[] = {
++	{ .compatible = "nxp,fxls8961af" },
+ 	{ .compatible = "nxp,fxls8962af" },
+ 	{ .compatible = "nxp,fxls8964af" },
++	{ .compatible = "nxp,fxls8967af" },
++	{ .compatible = "nxp,fxls8971cf" },
++	{ .compatible = "nxp,fxls8974cf" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, fxls8962af_spi_of_match);
+ 
+ static const struct spi_device_id fxls8962af_spi_id_table[] = {
++	{ "fxls8961af", fxls8961af },
+ 	{ "fxls8962af", fxls8962af },
+ 	{ "fxls8964af", fxls8964af },
++	{ "fxls8967af", fxls8967af },
++	{ "fxls8971cf", fxls8971cf },
++	{ "fxls8974cf", fxls8974cf },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(spi, fxls8962af_spi_id_table);
